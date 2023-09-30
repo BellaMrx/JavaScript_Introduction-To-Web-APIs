@@ -22,7 +22,7 @@ A complete overview of all media events can be found here [HTML - Living Standar
 
 Example:
 
-  [Complete Code](https://github.com/) --> **Examples/Part_1/...** 
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_1) --> **Examples/Part_1/...** 
 
 index.html:
    ```
@@ -60,4 +60,4 @@ script.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-1.png" width="400">
+ <img src="Images/WebAPI_Part-1.png" width="600">
