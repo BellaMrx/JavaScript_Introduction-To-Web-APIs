@@ -71,7 +71,7 @@ The `muted` property controls the sound. With `false` the sound is switched off 
 
 
 ## 1.2. Controlling audio files with JavaScript and the Media API
-Since the same Media API is used for the `audio` element as for the `video` element, everything can be done that was done for the `video` element.
+The same media API is used for the `audio` element as for the `video` element, so everything can be done that was done for the `video` element.
 
 Example:
 
