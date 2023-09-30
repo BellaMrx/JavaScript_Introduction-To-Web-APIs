@@ -26,14 +26,38 @@ Example:
 
 index.html:
    ```
-
+    <div class="video_canvas">
+        <video width="640">
+            <source src="video/Bugs.webm" type="video/webm">
+            <source src="video/Bugs.mp4" type="video/mp4">
+            Your web browser does not support video tag.
+        </video>
+        <p>
+            <button onclick="play_pause()" id="play">Play</button>
+            <button onclick="resize()" id="size">Zoom</button>
+            <button onclick="control()" id="ctrl">Display controls</button>
+            <button onclick="restart()">Restart</button>
+            <button onclick="mute()" id="mute">Sound off</button>
+        </p>
+    </div>
    ```
 
 script.js:
    ```
+    let vid = document.querySelector('video');
 
+    function play_pause() {
+      let but = document.querySelector('#play');
+      if (vid.paused) {
+        vid.play();
+        but.textContent = "--Pause--";
+      } else {
+        vid.pause();
+        but.textContent = "Play";
+      }
+    }
    ```
 
 Output:
 
- <img src="Images/" width="400">
+ <img src="Images/WebAPI_Part-1.png" width="400">
