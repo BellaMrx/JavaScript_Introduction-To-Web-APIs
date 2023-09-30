@@ -1,6 +1,6 @@
 let vid = document.querySelector('video');
 
-function play_pause() {
+function playVideo() {
     let but = document.querySelector('#play');
     if (vid.paused) {
         vid.play();

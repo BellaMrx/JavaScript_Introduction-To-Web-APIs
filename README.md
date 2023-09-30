@@ -33,7 +33,7 @@ index.html:
             Your web browser does not support video tag.
         </video>
         <p>
-            <button onclick="play_pause()" id="play">Play</button>
+            <button onclick="playVideo()" id="play">Play</button>
             <button onclick="resize()" id="size">Zoom</button>
             <button onclick="control()" id="ctrl">Display controls</button>
             <button onclick="restart()">Restart</button>
@@ -46,7 +46,7 @@ script.js:
    ```
     let vid = document.querySelector('video');
 
-    function play_pause() {
+    function playVideo() {
       let but = document.querySelector('#play');
       if (vid.paused) {
         vid.play();
@@ -56,8 +56,13 @@ script.js:
         but.textContent = "Play";
       }
     }
+    ...
    ```
 
 Output:
 
  <img src="Images/WebAPI_Part-1.png" width="600">
+
+In this example, some methods and properties of the JavaScript Media API are used for the `video` element. The `play()` and `pause()` methods start and pause the video respectively. The `playVideo()` function first checks whether the `paused` property is `true` or not. According to the evaluation the video is started or stopped and the label on the button changes accordingly.
+With the property `width` the size of the video, in the function `resize()`, is changed. Also the fade in and fade out of the controls can be enabled or disabled at any time using the `controls` property, as seen in the control() function. The `currentTime` property is used to set the position of the video to a specific time in seconds. Here it has been set to `0`, which causes the video to play from the beginning.
+The `muted` property controls the sound. With `false` the sound is switched off with `true` switched on. A volume control can be realized with the `volume` property, the values from `0.0` to `1.0` represent the respective volume.
