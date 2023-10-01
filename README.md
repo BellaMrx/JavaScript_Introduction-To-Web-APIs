@@ -150,7 +150,23 @@ script.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-2.png" width="600">
+ <img src="Images/WebAPI_Part-2.png" width="400">
 
 
 # 2. The Canvas 2D API
+The HTML element `<canvas>` is initially nothing more than a white area on which to draw using JavaScript. Such an empty drawing area can be specified as follows:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_3) --> **Examples/Part_3/...** 
+index.html:
+   ```
+    <body>
+      <h1>Create drawing area</h1>
+      <canvas id="myCanvas" width="400" height="200" style="border:1px solid #000000;">
+        Your browser does not support the canvas element.
+      </canvas>
+    </body>
+   ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-3.png" width="400">
