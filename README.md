@@ -9,6 +9,8 @@
     - 1.1. Controlling video files with JavaScript and the Media API
     - 1.2. Controlling audio files with JavaScript and the Media API
  2. The Canvas 2D API
+    - 2.1. Drawing on a `<canvas>` element
+    - 2.2. Methods used to draw on the `<canvas>` element
 
 ---------------------------------------------
 
@@ -157,6 +159,7 @@ Output:
 The HTML element `<canvas>` is initially nothing more than a white area on which to draw using JavaScript. Such an empty drawing area can be specified as follows:
 
   [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_3) --> **Examples/Part_3/...** 
+  
 index.html:
    ```
     <body>
@@ -170,3 +173,49 @@ index.html:
 Output:
 
  <img src="Images/WebAPI_Part-3.png" width="400">
+
+
+## 2.1. Drawing on a `<canvas>` element
+The actual drawing on the `<canvas>` elements is done with JavaScript. For this, a connection to the `<canvas>` element must be established with JavaScript. This is done with the HTML attribute `id` of `<canvas>` and the DOM method `querySelector()`.
+
+   ```
+    let canvas = document.querySelector('#myCanvas');
+   ```
+
+Another connection to an interface is needed so that something can be drawn on the `canvas` surface. This interface is called a *Rendering Context* and provides the necessary methods and properties for drawing. The connection to the context object is made with `getContext()` and takes as parameter the type of the context, here it is `2d`. An object of type *CanvasRenderingContext2D* is returned. The interface is accessed with `getContext()` and the string `2d` in it.
+
+   ```
+    let canvas = document.querySelector('#myCanvas');
+    let ctx = canvas.getContext("2d");
+   ```
+
+Example:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_4) --> **Examples/Part_4/...** 
+  
+script.js:
+   ```
+    let canvas = document.querySelector('#myCanvas');
+    if (canvas.getContext) {
+      let ctx = canvas.getContext("2d");
+      // sets the color to fill the drawing
+      ctx.fillStyle = "red";
+      // ctx.fillRect(0, 0, 300, 150); - start point in the upper left corner 0,0, with a 300 x 150 pixel rectangle
+      // the starting point is shifted by 20 pixel each (x,y)
+      ctx.fillRect(20, 20, 300, 150);
+    }
+   ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-4.png" width="400">
+
+
+#### 3D context (WebGL)
+To use the 3D context, the `getContext()` method must be given the `webgl` parameter (instead of `2d`) for a *3D rendering context* in the web browser. The object returned is of type *WebGLRenderingContext*. This is the version 1 of WebGL. Meanwhile there is a version 2, which is called with the parameter `webgl2`. This topic is very extensive and therefore I will not go into it further here.
+
+
+## 2.2. Methods used to draw on the `<canvas>` element
+
+
+
