@@ -567,8 +567,6 @@ Such libraries or frameworks package the functionalities so that they can be reu
  
 Of course there are plenty more good APIs out there, but these should be enough to get you started.
 
-If you want to write your own small framework you should have a look at [W3C Candidate Recommendation](https://www.w3.org/standards/types/#:~:text=A%20Candidate%20Recommendation%20Snapshot%20is).
-
 
 # 3. Determine the location with the geolocation API
 
