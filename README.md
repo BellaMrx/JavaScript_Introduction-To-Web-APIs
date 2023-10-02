@@ -11,6 +11,9 @@
  2. The Canvas 2D API
     - 2.1. Drawing on a `<canvas>` element
     - 2.2. Methods used to draw on the `<canvas>` element
+    - 2.3. Copy and manipulate images with `<canvas>`
+    - 2.4. Create your own functions (*wrapper*) for `<canvas>`
+    - 2.5. Extending the *CanvasRenderingContext2D*
 
 ---------------------------------------------
 
@@ -270,6 +273,187 @@ script.js:
 Output:
 
  <img src="Images/WebAPI_Part-5.png" width="400">
+
+The `fillStyle()` property sets the color used with `fillRect()` or `fillText`. With `fill()` and `stroke()` there are two types of methods to draw a shape. With the `fill...()` variant the shapes are drawn with filled color, with the `stroke...()` variant only a frame is drawn in the respective color without filling.
+
+Drawing single or multiple lines can be realized with the methods `moveTo()`, `lineTo()` and `stroke()`. With `moveTo(x, y)` the imaginary drawing pen is set at a certain position and with `lineTo()` the end point of the line is determined and with `stroke()` the line is drawn afterwards. With `lineWidth()` the thickness of the line is set.
+
+To draw a circle the method `arc()` can be used. The path is created with `beginPath` and with `arc()` the circle is drawn. The `fill` and `stroke` variants cannot be used here for drawing, but for filling with color or setting a frame these methods can be used.
+
+Text is drawn with either `fillText()` or `strokeText()`. The font or size is set with the `font` property.
+
+
+## 2.3. Copy and manipulate images with `<canvas>`
+With the method `drawImage()` it is possible to output images to a `canvas` element. The bitmaps can be read with the method `getImageData()`, and then you have full access to the pixels by traversing pixel by pixel in an array and thus it is possible to manipulate this image. If, on the other hand, pixels are to be drawn on a `canvas` element, this can be done with the `putImageData()` method.
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_6) --> **Examples/Part_6/...** 
+
+index.html:
+   ```
+    <body>
+      <h1>Drawing a picture</h1>
+      <canvas id="myCanvas" width="330" height="120" style="border:1px solid lightgrey;">
+        Your browser does not support the canvas element.
+      </canvas>
+      <br>
+      <button onclick="copy()">Copy</button>
+      <button onclick="copy_invert()">Copy and Invert</button>
+      <script src="script.js"></script>
+    </body>
+   ```
+
+script.js:
+   ```
+   let canvas = document.querySelector('#myCanvas');
+   if (canvas.getContext) {
+      let ctx = canvas.getContext("2d");
+      let img = new Image();
+      img.src = "images/flower_960.jpg";
+      img.onload = function() {
+        ctx.drawImage(img, 10, 10, 150, 100);
+      };
+
+      function copy() {
+        let imgData = ctx.getImageData(10, 10, 150, 100);
+        ctx.putImageData(imgData, 170, 10);
+      }
+
+      function copy_invert() {
+        let imgData = ctx.getImageData(10, 10, 150, 100);
+        let i = 0;
+        while (i < imgData.data.length) {
+            imgData.data[i] = 255 - imgData.data[i++];
+            imgData.data[i] = 255 - imgData.data[i++];
+            imgData.data[i] = 255 - imgData.data[i++];
+            imgData.data[i] = imgData.data[i++];
+        }
+        ctx.putImageData(imgData, 170, 10);
+      }
+    }
+   ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-6.png" width="600">
+
+This is a general algorithm for manipulating images, like other image editors use to invert images. In this and similar ways a lot of effects can be created. The image object can also be used from an `img` element in the document.
+
+#### *Uncaught SecurityError*
+Since it is possible to read parts of the image with the `getImageData()` method, it may happen that the error *Uncaught SecurityError* is returned in the JavaScript console. This is the case, for example, if the `getImageData()` method is used on the local computer. For it to work, the image must be on the same domain as the code.
+
+
+## 2.4. Create your own functions (*wrapper*) for `<canvas>`
+Since functions for circles and polygons are missing, it makes sense to pack this application order with the 2D rendering context into functions and these can then be easily called when creating the desired shape.
+
+Here is an example of a collection of such functions, in JavaScript:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_7) --> **Examples/Part_7/...**
+
+canvasFunc.js:
+   ```
+    function fillCircle(context, cx, cy, r) {
+      context.beginPath();
+      context.arc(cx, cy, r, 0, 2*Math.PI);
+      context.fill();
+      context.closePath();
+    }
+  
+    function strokeCircle(context, cx, cy, r) {
+      context.beginPath();
+      context.arc(cx, cy, r, 0, 2*Math.PI);
+      context.stroke();
+      context.closePath();
+    }
+ 
+    function fillPolygon(context, points) {
+      xy = points.split(" "); 
+      context.beginPath();
+      if(xy.length > 0) {
+        // determine start end point
+        start_end = xy[0].split(",");
+        context.moveTo(start_end[0], start_end[1]);
+      }
+      // run through individual points
+      for( i=1;  i< xy.length; i++) {
+        xyN = xy[i].split(",");
+        context.lineTo(xyN[0], xyN[1]);
+      }
+      context.lineTo(start_end[0], start_end[1]);
+      context.fill();
+      context.closePath();
+    }
+  
+    function strokePolygon(context, points) {
+      xy = points.split(" "); 
+      context.beginPath();
+      if(xy.length > 0) {
+        // determine start end point
+        start_end = xy[0].split(",");
+        context.moveTo(start_end[0], start_end[1]);
+      }
+      // run through individual points
+      for( i=1;  i< xy.length; i++) {
+        xyN = xy[i].split(",");
+        context.lineTo(xyN[0], xyN[1]);
+      }
+      context.lineTo(start_end[0], start_end[1]);
+      context.stroke();
+      context.closePath();
+    }
+   ```
+
+This script **canvasFunc.js** with the functions, for the circle and the polygon, must be included in the HTML document together with **draw.js**, which contains the main instructions.
+
+index.html:
+   ```
+    <body>
+      <h1>Canvas extension functions</h1>
+      <canvas id="myCanvas" width="300" height="300" style="border:1px solid lightgrey;">
+        Your browser does not support the canvas element.
+      </canvas>
+      <script src="canvasFunc.js"></script>
+      <script src="draw.js"></script>
+    </body>
+   ```
+
+draw.js:
+   ```
+    let canvas = document.querySelector('#myCanvas');
+    if (canvas.getContext) {
+      let ctx = canvas.getContext("2d");
+      ctx.fillStyle = "green";
+      fillCircle(ctx, 150, 150, 100);
+      ctx.lineWidth = 3;
+      strokeCircle(ctx, 150, 150, 100);
+      strokeCircle(ctx, 30, 30, 20);
+      strokeCircle(ctx, 30, 270, 20);
+      strokeCircle(ctx, 270, 30, 20);
+      strokeCircle(ctx, 270, 270, 20);
+      ctx.lineWidth = 1;
+      strokeCircle(ctx, 150, 150, 120);
+      ctx.lineWidth = 3;
+      ctx.fillStyle = "lightgreen";
+      fillPolygon(ctx, points = "150,280 270,100 30,100");
+      strokePolygon(ctx, points = "150,280 270,100 30,100");
+    }
+   ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-7.png" width="400">
+
+
+## 2.5. Extending the *CanvasRenderingContext2D*
+
+
+
+
+
+
+
+
+
+
 
 
 
