@@ -1,3 +1,4 @@
+/* Canvas help functions          */
 function fillCircle(context, cx, cy, r) {
     context.beginPath();
     context.arc(cx, cy, r, 0, 2*Math.PI);

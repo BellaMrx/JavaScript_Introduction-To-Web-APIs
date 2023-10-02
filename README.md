@@ -351,6 +351,7 @@ Here is an example of a collection of such functions, in JavaScript:
 
 canvasFunc.js:
    ```
+    /* Canvas help functions          */
     function fillCircle(context, cx, cy, r) {
       context.beginPath();
       context.arc(cx, cy, r, 0, 2*Math.PI);
@@ -444,8 +445,113 @@ Output:
 
 
 ## 2.5. Extending the *CanvasRenderingContext2D*
+In section 2.4. it was shown how the *2D rendering context* can be used to access a `canvas` element with auxiliary functions in a simplified way. However, this is still relatively cumbersome because global function calls have to be used.
 
+Draw a frame around a circle with the help function:
 
+  ```
+   ctx.lineWidth = 3;
+   strokeCircle(ctx, 150, 150, 100);  
+  ```
+
+However, the same looks a bit better with the already implemented `strokeRect()` method, because dr *2D-Context* does not have to be passed as a function parameter:
+
+  ```
+   ctx.lineWidth = 3;
+   ctx.strokeRect(20, 20, 300, 150);  
+  ```
+
+It would be better, more consistent and more logical to use the self-written helper function `strokeCircle()` like this:
+
+  ```
+   ctx.strokeCircle(150, 150, 100);  
+  ```
+
+To retrofit something like this you only have to extend the prototype in `CanvasRenderingContext2D.prototype.name` with the corresponding method:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_8) --> **Examples/Part_8/...** 
+
+canvasExt.js:
+  ```
+   /* Canvas extension         */
+   CanvasRenderingContext2D.prototype.fillCircle = function(cx, cy, r) {
+     this.beginPath();
+     this.arc(cx, cy, r, 0, 2*Math.PI);
+     this.fill();
+     this.closePath();
+   }
+  
+   CanvasRenderingContext2D.prototype.strokeCircle = function(cx, cy, r) {
+     this.beginPath();
+     this.arc(cx, cy, r, 0, 2*Math.PI);
+     this.stroke();
+     this.closePath();
+   }
+  
+   CanvasRenderingContext2D.prototype.fillPolygon = function(points) {
+     xy = points.split(" "); 
+     this.beginPath();
+     if(xy.length > 0) {
+      // determine start end point
+      start_end = xy[0].split(",");
+      this.moveTo(start_end[0], start_end[1]);
+     }
+     // run through single points
+     for( i=1;  i< xy.length; i++) {
+       xyN = xy[i].split(",");
+       this.lineTo(xyN[0], xyN[1]);
+     }
+     this.lineTo(start_end[0], start_end[1]);
+     this.fill();
+     this.closePath();
+   }
+  
+   CanvasRenderingContext2D.prototype.strokePolygon = function(points) {
+     xy = points.split(" "); 
+     this.beginPath();
+     if(xy.length > 0) {
+      // determine start end point
+      start_end = xy[0].split(",");
+      this.moveTo(start_end[0], start_end[1]);
+     }
+     // run through single points
+     for( i=1;  i< xy.length; i++) {
+       xyN = xy[i].split(",");
+       this.lineTo(xyN[0], xyN[1]);
+     }
+     this.lineTo(start_end[0], start_end[1]);
+     this.stroke();
+     this.closePath();
+   }
+  ```
+
+After the prototype has been extended, these new methods can be used with the Context object:
+
+draw.js:
+  ```
+   let canvas = document.querySelector('#myCanvas');
+   if (canvas.getContext) {
+     let ctx = canvas.getContext("2d");
+     ctx.fillStyle = "red";
+     ctx.fillCircle(150, 150, 100);
+     ctx.lineWidth = 3;
+     ctx.strokeCircle(150, 150, 100);
+     ctx.strokeCircle(30, 30, 20);
+     ctx.strokeCircle(30, 270, 20);
+     ctx.strokeCircle(270, 30, 20);
+     ctx.strokeCircle(270, 270, 20);
+     ctx.lineWidth = 1;
+     ctx.strokeCircle(150, 150, 120);
+     ctx.lineWidth = 3;
+     ctx.fillStyle = "blue";
+     ctx.fillPolygon(points = "150,280 270,100 30,100");
+     ctx.strokePolygon(points = "150,280 270,100 30,100");
+   }
+  ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-8.png" width="500">
 
 
 
