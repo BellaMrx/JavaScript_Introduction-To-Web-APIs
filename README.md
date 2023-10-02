@@ -334,7 +334,7 @@ script.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-6.png" width="600">
+ <img src="Images/WebAPI_Part-6.png" width="500">
 
 This is a general algorithm for manipulating images, like other image editors use to invert images. In this and similar ways a lot of effects can be created. The image object can also be used from an `img` element in the document.
 
@@ -444,6 +444,7 @@ Output:
 
 
 ## 2.5. Extending the *CanvasRenderingContext2D*
+
 
 
 
