@@ -14,6 +14,8 @@
     - 2.3. Copy and manipulate images with `<canvas>`
     - 2.4. Create your own functions (*wrapper*) for `<canvas>`
     - 2.5. Extending the *CanvasRenderingContext2D*
+    - 2.6. Overview of ready-made `<canvas>` libraries
+ 3. Determine the location with the geolocation API
 
 ---------------------------------------------
 
@@ -551,11 +553,24 @@ draw.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-8.png" width="500">
+ <img src="Images/WebAPI_Part-8.png" width="400">
 
 
+## 2.6. Overview of ready-made `<canvas>` libraries
+The selection of ready-made `<canvas>` libraries is impressive. Many of these ready-made APIs use only JavaScript, and you don't need an extension anymore. Canvas APIs exist for different purposes, for drawing shapes, graphs or animations. Of course, you can also write your own libraries.
+
+Such libraries or frameworks package the functionalities so that they can be reused with a simpler syntax.
+
+ - [Paper.js](http://paperjs.org) - vector graphics scripting with good documentation
+ - [EaselJS](https://createjs.com/) - The functinality of this API is huge, similar to *Flash*.
+ - [Camanjs](http://camanjs.com) - Specialist in pixel manipulation(image editing).
+ 
+Of course there are plenty more good APIs out there, but these should be enough to get you started.
+
+If you want to write your own small framework you should have a look at [W3C Candidate Recommendation](https://www.w3.org/standards/types/#:~:text=A%20Candidate%20Recommendation%20Snapshot%20is).
 
 
+# 3. Determine the location with the geolocation API
 
 
 
