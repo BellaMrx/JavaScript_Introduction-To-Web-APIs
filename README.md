@@ -565,10 +565,62 @@ Such libraries or frameworks package the functionalities so that they can be reu
  - [EaselJS](https://createjs.com/) - The functinality of this API is huge, similar to *Flash*.
  - [Camanjs](http://camanjs.com) - Specialist in pixel manipulation(image editing).
  
-Of course there are plenty more good APIs out there, but these should be enough to get you started.
+Of course there are a lot of more good APIs out there, but these should be enough to get you started.
 
 
 # 3. Determine the location with the geolocation API
+The Geolocation API can be used to determine the visitor's location, which works with almost everything modern web browsers. The browser can use several methods for this, such as the IP address, the WLAN connection, the cell tower the smartphone is connected to, and the position via GPS transmitter, as long as it is supported by the hardware. If a device contains a GPS transmitter, the geolocation API theoretically works offline as well.
+
+How the determination works also depends on the device used. For a local desktop computer, which is not equipped with a GPS transmitter or a mobile modem, the accuracy of the position by IP address can vary quite a bit (depending on the provider). In a rural region, for example, the determination of the location with a mobile device is usually accurate to the meter.
+
+#### Privacy and security
+Determining the location of a user is quite easy nowadays. However, it is not possible to locate visitors to a website to the nearest meter. You can't get location data without the explicit consent of the visitor. In most web browsers there is a query. How the web browser stores this consent or refusal varies, but can be reversed at any time.
+
+ <img src="Images/GelocationAPI_Agreement.PNG" width="600">
+
+More information about the security rules and the Geolocation API can be found here [W3C](https://w3c.github.io/geolocation-api/).
+
+
+## 3.1. Using the Geolocation API in an HTML Document 
+To be able to use the Geolocation API, you must first check whether it is supported:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_9) --> **Examples/Part_9/...** 
+
+index.html:
+  ```
+   <body>
+     <h1>Using Geolocation API</h1>
+     <p>Click to determine your position.</p>
+     <button onclick="getmyLocation()">Determine position</button>
+     <p class="output"></p>
+     <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   let x = document.querySelector('.output');
+
+   function getmyLocation() {
+     if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+     } else {
+        x.innerHTML = "Your web browser does not support the Geolocation API!";
+     }
+   }
+
+   function showPosition(position) {
+     let pos = "Latitude: " + position.coords.latitude;
+     pos += "<br>Longitude: " + position.coords.longitude;
+     x.innerHTML = pos;
+   }
+  ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-9.png" width="500">
+
+
 
 
 
