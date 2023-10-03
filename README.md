@@ -18,6 +18,12 @@
  3. Determine the location with the geolocation API
     - 3.1. Using the Geolocation API in an HTML Document
     - 3.2. Handle errors and access rights of the Geolocation API
+    - 3.3. Fine-tuning with further options of the Geolocation API
+    - 3.4. Permanently monitor the position of the user
+    - 3.5. Displaying the user's position on a map
+ 4. Drag & Drop-API
+
+
 
 ---------------------------------------------
 
@@ -620,14 +626,14 @@ script.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-9.png" width="500">
+ <img src="Images/WebAPI_Part-9.png" width="400">
 
 When the button is clicked, the function `geMyLocation()` is called, where first it is checked if `navigator.geolocation` is equal to `true` and thus the API can be used. Then the `getCurrentPosition()` method of the API starts. On first use, the user's consent should be obtained. If consent is given and the `getCurrentPosition()` method is executed successfully, a coordinate object is returned which is passed as a parameter to the callback function set up here with `showPosition()`. This coordinate object is used in the `showPosition` callback function to output the determined data (latitude, longitude).
 
 There are more properties than `coords.latitude` and `coords.longitude`:
 
 | Property                  | Description                             |
-|-------------------------- | --------------------------------------- |
+| ------------------------- | --------------------------------------- |
 | `coords.latidude`         | Geographic latitude                     |
 | `coords.longitude`        | Geographic longitude                    |
 | `coords.accuracy`         | Precision of width and length in meters |
@@ -693,10 +699,232 @@ Depending on whether an error occurred and which error occurred, the result will
 
 Possible errors and their meaning:
 | Error                  | Meaning                                                                              |
-|----------------------- | ------------------------------------------------------------------------------------ |
+| ---------------------- | ------------------------------------------------------------------------------------ |
 | `PERMISSION_DENIED`    | Access denied. User has probably denied permission to determine position.            |
 | `POSITION_UNAVAILABLE` | The position could not be determined.                                                |
 | `TIMEOUT`              | The query of the position took too long and could not be done within a certain time. |
+
+
+## 3.3. Fine-tuning with further options of the Geolocation API
+The method `getCurrentPosition()` can take a third optional parameter with an object of type `PositionOptions`:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_11) --> **Examples/Part_11/...** 
+
+index.html:
+  ```
+   <body>
+     <h1>Geolocation API - fine tuning</h1>
+     <p>Click to determine your position.</p>
+     <button onclick="getmyLocation()">Determine position</button>
+     <p class="output"></p>
+     <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   let x = document.querySelector('.output');
+
+   function getmyLocation() {
+     if (navigator.geolocation) {
+        let geo_options = {
+            enableHighAccuracy: true,
+            maximumAge: 30000,
+            timeout: 27000
+        };
+        navigator.geolocation.getCurrentPosition(showPosition, showError, geo_options);
+     } else {
+        x.innerHTML = "Your web browser does not support the Geolocation API!";
+     }
+   }
+   ...
+  ```
+
+Here with `enableHighAccuracy`, `maximumAge` and `timeout` all three existing properties of the `PositionOptions` object are used.
+
+| Property             | Description |
+| -------------------- | -------------- |
+| `enableHighAccuracy` | With `true` the API is forced to determine the position even more precisely. |
+| `maximumAge`         | This specifies how long a cached location data may be used the next time `getCurrentPosition()` is called. If `0` is specified, no cached data will be used, and the current position is always required. |
+| `timeout`            | This specifies a time in milliseconds after which an error (`TIMEOUT`) is to be triggered if no data could be retrieved by then. |
+
+  ```
+   ...
+   let geo_options = {
+     enableHighAccuracy: true,
+     maximumAge: 30000,
+     timeout: 27000
+   };
+   ...
+  ```
+
+Here `enableHighAccuracy: true` was used to enable the highest possible location determination. If the last location was determined with `getCurrentPosition()` within 30 seconds, a cached location may be used, which was specified with `maximumAge: 30000`. If the location determination takes longer than 27 seconds, a timeout due to the timeout is returned as an error (`timeout:27000`).
+
+
+## 3.4. Permanently monitor the position of the user
+Permanent monitoring of the user's position is possible with the `watchPosition()` method, which has the same structure as `getCurrentPosition()`. The first parameter is a callback function which should be called on success to evaluate the position data. Optionally, a callback function can be set as the second parameter, which will be called in case of an error. Also optional can be used as parameter is the `PositionObject` object.
+In contrast to the method `getCurrentPosition()` the method `watchPosition()` calls the callback function every time the position of the user changes. Additionally, this method returns an ID that can be passed to the `clearWatch()` method as a parameter to stop the `watchPosition()` method again.
+
+To better test the following example, a device with a GPS transmitter is required:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_12) --> **Examples/Part_12/...** 
+
+index.html:
+  ```
+   <body>
+     <h1>Geolocation API - Position monitoring</h1>
+     <p>Click to determine your position.</p>
+     <button onclick="getmyLocation()">Determine position</button>
+     <button onclick="endmyLocation()">End monitoring</button>
+     <p class="output"></p>
+     <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   let x = document.querySelector('.output');
+   let id;
+
+   function getmyLocation() {
+     if (navigator.geolocation) {
+        let geo_options = {
+            enableHighAccuracy: true,
+            maximumAge: 30000,
+            timeout: 27000
+        };
+        id = navigator.geolocation.watchPosition(showPosition, showError, geo_options);
+     } else {
+        x.innerHTML = "Your web browser does not support the Geolocation API!";
+     }
+   }
+
+   function showPosition(position) {...}
+
+   function showError(error) {...}
+
+   function endmyLocation() {
+     if (navigator.geolocation) {
+        navigator.geolocation.clearWatch(id);
+        x.innerHTML = "Position monitoring finished";
+     } else {
+        x.innerHTML = "The web browser does not support geolocation API!";
+     }
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-12.png" width="500">
+
+
+## 3.5. Displaying the user's position on a map
+With the information about the geographical longitude and latitude, you have all the necessary data to display the location on a map. This requires an API for a map provider.
+
+Unlike in the examples before, the callback function `showPosition()` has to be adapted to display the detected location in a map. In the following example, the `showPositionGoogle()` and `showPositionBing()` callback functions were used to display the location in the Google and Bing map:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_13) --> **Examples/Part_13/...** 
+
+index.html:
+  ```
+   ...
+      <!-- For Google Maps -->
+      <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+      <!-- For Bing Maps -->
+      <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+   </head>
+   <body>
+      <h1>Geolocation API - show position on map</h1>
+      <p>Click to view your position on a map.</p>
+      <p>
+        <button onclick="getmyLocation('google')">Google-Map</button>
+        <button onclick="getmyLocation('bing')">Bing-Map</button>
+        <button onclick="endmyLocation()">End monitoring</button>
+      </p>
+      <div class="output"></div>
+      <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   let x = document.querySelector('.output');
+   let id = null;
+   let geo_options = {
+     enableHighAccuracy: true,
+     maximumAge: 30000,
+     timeout: 27000
+   };
+
+   function getmyLocation(str) {
+     if (navigator.geolocation) {
+        if (id != null) {
+            navigator.geolocation.clearWatch(id);
+        }
+        if (str == "google") {
+            id = navigator.geolocation.watchPosition(
+                showPositionGoogle, showError, geo_options);
+        } else if (str == "bing") {
+            id = navigator.geolocation.watchPosition(
+                showPositionBing, showError, geo_options);
+        }
+     } else {
+        x.innerHTML = "The web browser does not support geolocation API!";
+     }
+   }
+
+   // Show position with Google Maps
+   function showPositionGoogle(position) {
+     let latlng = new google.maps.LatLng(
+        position.coords.latitude,
+        position.coords.longitude);
+     let myOptions = {
+        zoom: 12,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+     };
+     let map = new google.maps.Map(x, myOptions);
+
+     let marker = new google.maps.Marker({
+        position: latlng,
+        map: map,
+        title: "Your position"
+     });
+   }
+   // Show position withBing Maps
+   function showPositionBing(position) {
+     let latlng = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude);
+     let myOptions = {
+        credentials: "AoDa4otH86aw2VF_Te1WpuxyGlI4-sUV3ZSIDxEWnGXAj62fmgvd2CZxFr82dqFE",
+        center: latlng,
+        mapTypeId: Microsoft.Maps.MapTypeId.road,
+        zoom: 14
+     };
+     let map = new Microsoft.Maps.Map(x, myOptions);
+   }
+   ...
+  ```
+
+ <img src="Images/WebAPI_Part-13.png" width="500">
+
+First, the *Google Maps API* and the *Bing Maps AJAX Control* were embedded. The size for the map is shown in the `div`- element. 
+When a button is clicked, the function `getMyLocation()` determines which button was clicked after checking if the Geolocation API is available. This was realized here with the string `google` or `bing`, which is passed to the function `getMyLocation(str)` when clicking. Depending on which map is to be used, the `watchPosition()` method is passed the callback function `showPositionGoogle()` or `showPositionBing()` as the second parameter.
+
+Apart from the properties determined with the geolocation API (`position.coords.latitude` and `position.coords.longitude`), the methods, objects and options contained in `showPositionGoogle()` and `showPositionBing()` are pure *Google Maps API* or *Bing Maps AJAX Control* specifications, which have nothing more to do with the geolocation API. 
+
+More information about the *Google Maps API* and *Bing Maps AJAX Control*:
+ - [Google Maps API](https://mapsplatform.google.com/)
+ - [Bing Maps AJAX Control](https://learn.microsoft.com/en-us/bingmaps/v8-web-control/)
+
+#### `sensor` parameter on *Google-Maps-API* set to `true` or `false`?
+In the example, the `sensor` parameter has been set to `true` (`<script src="http://maps.google.com/maps/api/js?sensor=true"></script>`) because it makes the positioning more accurate if the device contains a GPS transmitter. For a local computer, it can be set to `false` if there is no GPS transmitter.
+
+
+# 4. Drag & Drop-API
+
+
+
+
+
+
 
 
 
