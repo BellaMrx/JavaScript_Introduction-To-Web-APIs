@@ -16,6 +16,8 @@
     - 2.5. Extending the *CanvasRenderingContext2D*
     - 2.6. Overview of ready-made `<canvas>` libraries
  3. Determine the location with the geolocation API
+    - 3.1. Using the Geolocation API in an HTML Document
+    - 3.2. Handle errors and access rights of the Geolocation API
 
 ---------------------------------------------
 
@@ -619,6 +621,82 @@ script.js:
 Output:
 
  <img src="Images/WebAPI_Part-9.png" width="500">
+
+When the button is clicked, the function `geMyLocation()` is called, where first it is checked if `navigator.geolocation` is equal to `true` and thus the API can be used. Then the `getCurrentPosition()` method of the API starts. On first use, the user's consent should be obtained. If consent is given and the `getCurrentPosition()` method is executed successfully, a coordinate object is returned which is passed as a parameter to the callback function set up here with `showPosition()`. This coordinate object is used in the `showPosition` callback function to output the determined data (latitude, longitude).
+
+There are more properties than `coords.latitude` and `coords.longitude`:
+
+| Property                  | Description                             |
+|-------------------------- | --------------------------------------- |
+| `coords.latidude`         | Geographic latitude                     |
+| `coords.longitude`        | Geographic longitude                    |
+| `coords.accuracy`         | Precision of width and length in meters |
+| `coords.altitude`         | Height in meters                        |
+| `coords.altitudeAccuracy` | Precision of the height in meters       |
+| `coords.heading`          | Direction                               |
+| `coords.speed`            | Speed                                   |
+| `timestamp`               | Timestamp of the request                |
+
+
+## 3.2. Handle errors and access rights of the Geolocation API
+If the Geolocation API is used, one should set up a function for errors, so that the user knows why a location detection did not work. The function only needs to be passed as the second parameter of the `getCurrentPosition()` method:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_10) --> **Examples/Part_10/...** 
+
+index.html:
+  ```
+   <body>
+     <h1>Geolocation API - error handling</h1>
+     <p>Click to determine your position.</p>
+     <button onclick="getmyLocation()">Determine position</button>
+     <p class="output"></p>
+     <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   let x = document.querySelector('.output');
+
+   function getmyLocation() {
+     if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+     } else {
+        x.innerHTML = "Your web browser does not support the Geolocation API!";
+     }
+   }
+
+   function showPosition(position) {
+     let pos = "Latitude: " + position.coords.latitude;
+     pos += "<br>Londitude: " + position.coords.longitude;
+     x.innerHTML = pos;
+   }
+
+   function showError(error) {
+     if (error.PERMISSION_DENIED) {
+        x.innerHTML = "Access to your position has been denied!? Blocked?"
+     } else if (error.POSITION_UNAVAILABLE) {
+        x.innerHTML = "There are no geoposition data available"
+     } else if (error.TIMEOUT) {
+        x.innerHTML = "Timeout on location request was triggered."
+     } else {
+        x.innerHTML = "An unknown error has occurred";
+     }
+   }
+  ```
+
+Output:
+
+ <img src="Images/WebAPI_Part-10.png" width="400">
+
+Depending on whether an error occurred and which error occurred, the result will be output on the website. 
+
+Possible errors and their meaning:
+| Error                  | Meaning                                                                              |
+|----------------------- | ------------------------------------------------------------------------------------ |
+| `PERMISSION_DENIED`    | Access denied. User has probably denied permission to determine position.            |
+| `POSITION_UNAVAILABLE` | The position could not be determined.                                                |
+| `TIMEOUT`              | The query of the position took too long and could not be done within a certain time. |
 
 
 
