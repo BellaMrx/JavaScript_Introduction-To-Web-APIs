@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Drag and Drop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Drag and Drop</h1>
+    <p>Drag the squares with letters into the gray boxes.</p>
+    <div id="drag-elements">
+        <img src="images/F.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source1" alt="Letter-F">
+        <img src="images/L.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source2" alt="Letter-L">
+        <img src="images/O.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source3" alt="Letter-O">
+        <img src="images/W.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source4" alt="Letter-W">
+    </div>
+    <div id="drop-elements">
+        <div id="dropplace1" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace2" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace3" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace4" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+    </div>
+    <!-- Output of information -->
+    <div id="log-dnd" style="clear: both;"></div>
+    <script src="script.js"></script>
+</body>
+</html>

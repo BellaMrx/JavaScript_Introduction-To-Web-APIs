@@ -24,7 +24,12 @@
  4. Drag & Drop-API
     - 4.1. Making an HTML element `draggable`
     - 4.2. Events that can occur during drag & drop
-
+    - 4.3. Start dragging elements
+    - 4.4 Handling the data for dragging
+    - 4.5. Set the place for dropping
+    - 4.6. Process the dropped data
+    - 4.7. Handle other events during the drag and drop process
+    - 4.8. Further notes on Drag & Drop API
 
 
 ---------------------------------------------
@@ -946,22 +951,200 @@ Theoretically, `draggable="true"` can be omitted from the `<img>` element, becau
 | `dragend`        | This event is triggered when the drag & drop is finished. | 
 
 
+## 4.3. Start dragging elements
+After setting an element with the `draggable` attribute to `true` to be able to drag it, an event handler can be set up for the `dragstart` event, where m will take care of the data that is being dragged:
+
+  ```
+   <img src="image.png" width="100" height="100" draggable="true" ondragstart="dragHandle(event);" id="source1">
+  ```
 
 
+## 4.4 Handling the data for dragging
+When the user starts dragging the image, the `dragstart` event is fired, and the `dragHandle(event)` event handler is called where the data to drag is specified. For this purpose, each drag event has a `dataTransfer` object that is used to manage the data to be dragged:
+
+  ```
+   ...
+   function dragHandle(e) {
+    ...
+    e.dataTransfer.setData("text", e.target.id);
+    e.dataTransfer.effectAllowed = "move";
+   }
+   ...
+  ```
+
+The `setData()` method is used to specify the data to be transported. The first parameter is used to specify the data to be transferred with `"text"`, which corresponds to the *MIME type* `"text/plain"`. Other *MIME types* can also be used for the type of the first parameter. The second parameter specifies the data itself. You can get to this data using the `id`.
+With `effectAllowed` a visual annotation can be added to the drag operation for the user (`move`). Besides the `move` value used here for a restriction to dragging, `none`, `copy`, `copyLink`, `copyMove`, `link`, `linkMove`, `move` and `all` can also be used. How the webbrowsr displays it depends on the browser.
 
 
+#### Show own icon when dragging
+The `setDragImage()` method of the `dataTransfer` object can be used to set a custom icon for dragging.
 
 
+## 4.5. Set the place for dropping
+The `dragover` event defines where an element can be dropped. By default, data or elements cannot be dropped on other elements. To allow dropping on an element, the default behavior of the element must be prevented. This is achieved by using `event.preventDefault()` to respond to the occurrence of the `dragover` event.
+
+  ```
+   <div id="dropplace1" ondragover="event.preventDefault()"></div>
+  ```
+
+An element can now be dropped onto this `div` element.
 
 
+## 4.6. Process the dropped data
+After preventing the default behavior of the `dragover` event, an event handler can be set up for the `drop` event when the element has been dropped. In the function where the `drop` event was handled, the dropped data can be taken care of right away.
+
+index.html
+  ```
+   <div id="dropplace1" ondrop="dropHanlde(event)" ondragover="event.preventDefault()"></div>
+  ```
+
+script.js
+  ```
+   function dropHandle(e) {
+    e.preventDefault();
+    let data = e.dataTransfer.getData("Text");
+    let theDraggedElement = document.getElementById(data);
+    e.target.appendChild(theDraggedElement);
+   }
+  ```
+
+In the function `dropHandle(e)` a default behavior must be prevented again with `e.preventDefault()`, otherwise e.g. after dropping an element, if it is e.g. a link this would be opened in the web browser.
+With the `getData()` method of the `dataTransfer` object the dropped data can be retrieved based on the `MIME type`. In `data` you can only find the `id` of the dropped element at the moment, but with `getElementById()` the complete HTML element is fetched to this `ìd` and passed with `appendChild()` as a new child element inside the drop area.
 
 
+## 4.7. Handle other events during the drag and drop process
+Additional visual cues or information for the user can be presented with the `dragenter`, `dragleave` and `dragend` events:
+
+  ```
+   ...
+   document.addEventListener("dragenter", function(event) {
+     let theData = event.dataTransfer.getData("Text");
+     let theDraggedElement = document.getElementById(theData);
+     theDraggedElement.style.opacity = 0.0;
+   }, false);
+
+  document.addEventListener("dragend", function(event) {
+     event.target.style.opacity = "";
+   }, false);
+   ...
+  ```
+
+Here, once the `dragenter` event has occurred, the original location of the dragged HTML element is displayed as invisible (`opacity = 0.0`). As soon as this action is finished and the `dragenter` event is fired, the element will be displayed completely visible again.
+The third parameter of `addEventListener()` is used to determine if and in which order the event will rise. A boolean parameter is expected as value. By default `false` is mostly used here, which calls the event handler of the element first and then the event handlers of the parent elements. With `true` it is the other way around.
 
 
+### The complete example in the overview
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_14) --> **Examples/Part_14/...** 
+
+index.html:
+  ```
+    <h1>Drag and Drop</h1>
+    <p>Drag the squares with letters into the gray boxes.</p>
+    <div id="drag-elements">
+        <img src="images/F.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source1" alt="Letter-F">
+        <img src="images/L.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source2" alt="Letter-L">
+        <img src="images/O.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source3" alt="Letter-O">
+        <img src="images/W.png" width="80" height="80" draggable="true" ondragstart="dragHandle(event);" id="source4" alt="Letter-W">
+    </div>
+    <div id="drop-elements">
+        <div id="dropplace1" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace2" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace3" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+        <div id="dropplace4" ondrop="dropHandle(event);" ondragover="dragoverHandle(event);" ondragleave="dragleaveHandle(event);">
+        </div>
+    </div>
+    <!-- Output of information -->
+    <div id="log-dnd" style="clear: both;"></div>
+    <script src="dnd.js"></script>
+  ```
+
+script.js:
+  ```
+   // Output of information
+   let log = document.getElementById("log-dnd");
+   let counter = 0;
+   const maxPictures = 4;
+
+   // Called when 'drag' was started
+   function dragHandle(e) {
+     log.innerHTML = "An element is drawn."
+        // What to 'pull
+     e.dataTransfer.setData("Text", e.target.id);
+     e.dataTransfer.effectAllowed = 'move';
+     // Own icon that is displayed when dragging
+     let dragIcon = document.createElement('img');
+     dragIcon.src = "images/logo.png";
+     dragIcon.widh = 50;
+     e.dataTransfer.setDragImage(dragIcon, -5, -5);
+   }
+
+   // Function is called at 'drop'
+   function dropHandle(e) {
+     if (!e.target.hasChildNodes()) {
+        log.innerHTML = "Operation canceled: There is already an element here.";
+        e.preventDefault();
+        return false;
+     }
+     // A reference to the 'drag' element
+     let data = e.dataTransfer.getData("Text");
+     // Get the element
+     let draggedElement = document.getElementById(data);
+
+     // log.innerHTML = data + "/" + e.target.id;
+     console.log(data + "/" + e.target.id);
+
+     // Add the element to the drop element
+     e.target.appendChild(draggedElement);
+     // Allow the browser to 'drop'
+     e.preventDefault();
+     counter++;
+     if (counter == maxPictures) {
+        log.innerHTML = "All elements were dropped."
+     } else {
+        log.innerHTML = "Element " + counter + " from " + maxPictures +
+            " was dropped."
+     }
+   }
+
+   // Function is called with dragged element over the target
+   function dragoverHandle(e) {
+     e.preventDefault();
+     if (!e.target.hasChildNodes()) {
+        log.innerHTML = "Here already lies an element.";
+     } else {
+        log.innerHTML = "You can drop the element here.";
+     }
+   }
+
+   // Function is called when the dragged
+   // Element has left the target area again
+   function dragleaveHandle(e) {
+     e.preventDefault();
+     log.innerHTML = "Target area was left again";
+   }
+
+   document.addEventListener("dragenter", function(event) {
+     let theData = event.dataTransfer.getData("Text");
+     let theDraggedElement = document.getElementById(theData);
+     theDraggedElement.style.opacity = 0.0;
+   }, false);
+
+   document.addEventListener("dragend", function(event) {
+     event.target.style.opacity = "";
+   }, false);
+  ```
+
+ <img src="Images/WebAPI_Part-14a.png" width="500"> <img src="Images/WebAPI_Part-14b.png" width="500">
 
 
+## 4.8. Further notes on Drag & Drop API
+Dragging elements outside the web browser is no longer possible with `dataTransfer.getData()`. However, this data is then contained in the `files` property of `dataTransfer`. To realize this data transfer e.g. for an upload of data via drag & drop, a detailed knowledge about the File API is necessary. More information can be found here [W3C](https://www.w3.org/TR/FileAPI/).
 
 
-
+# 5.
 
 
