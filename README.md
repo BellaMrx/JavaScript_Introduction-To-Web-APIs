@@ -22,6 +22,8 @@
     - 3.4. Permanently monitor the position of the user
     - 3.5. Displaying the user's position on a map
  4. Drag & Drop-API
+    - 4.1. Making an HTML element `draggable`
+    - 4.2. Events that can occur during drag & drop
 
 
 
@@ -919,6 +921,32 @@ In the example, the `sensor` parameter has been set to `true` (`<script src="htt
 
 
 # 4. Drag & Drop-API
+Drag & Drop has been implemented over the years with libraries like [JQuery](http://jquery.com), [Dojo](http://dojotoolkit.org) or [MooTools](http://mootools.net) to drag an object from one position to another in the web browser with the mouse button held down. With the Drag & Drop API, *Drag & Drop native* can be used without any further library. However, using the *native Drag & Drop API* is more complex than the solution with jQuery, Dojo or MooTools.
+
+
+## 4.1. Making an HTML element `draggable`
+To make an HTML element draggable, the HTML attribute `draggable` can be used. The attribute is passed either the value `true` or `false`. With `true` the HTML element is marked as draggable and with `false` not:
+
+  ```
+   <img src="image.png" width="100" height="100" draggable="true">
+  ```
+Theoretically, `draggable="true"` can be omitted from the `<img>` element, because some HTML elements are already drawable by default like `<img>` or `<a>` with the `href` attribute.
+
+
+## 4.2. Events that can occur during drag & drop
+
+| JavaScript Event | Description |
+| ---------------- | -------------- |
+| `dragstart`      | Fired when the user starts dragging an HTML element with the mouse button held down. After the `dragstart` event, a function is usually called that takes care of the data associated with that element. |
+| `dragenter`      | Fired when the mouse makes the first move when dragging over an HTML element. This event is useful if something needs to be styled visually when the user starts dragging an HTML element. |
+| `dragover`       | The event is triggered when a draggable element stands over another element. |
+| `dragleave`      | The event is triggered when the dragged element leaves another HTML element. In practice, this event can be used to remove a visual highlight from a drop area. |
+| `drag`           | The event is fired whenever an HTML element is moved with the mouse button held down. |
+| `drop`           | The `drop` event is fired when an element is dropped over another element that was a valid drop target. Here, the usual response is to take care of the dropped data and insert it into the drop area. |
+| `dragend`        | This event is triggered when the drag & drop is finished. | 
+
+
+
 
 
 
