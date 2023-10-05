@@ -18,7 +18,7 @@ if (canvas.getContext) {
     // Line
     ctx.lineWidth = 10;                     // line thickness
     ctx.moveTo(400, 0);                     // moves the path to a specified point without drawing a line
-    ctx.lineTo(0, 250);                     // fügt eine Linie vom letzten Punkt im Pfad zu einem neuen Punkt hinzu
+    ctx.lineTo(0, 250);                     // adds a line from the last point in the path to a new point
     ctx.stroke();                           // draws the path
     // Circle
     ctx.lineWidth = 5;
