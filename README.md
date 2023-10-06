@@ -30,6 +30,8 @@
     - 4.6. Process the dropped data
     - 4.7. Handle other events during the drag and drop process
     - 4.8. Further notes on Drag & Drop API
+ 5. Web Storage - Databases for offline applications
+
 
 
 ---------------------------------------------
@@ -1145,6 +1147,15 @@ script.js:
 Dragging elements outside the web browser is no longer possible with `dataTransfer.getData()`. However, this data is then contained in the `files` property of `dataTransfer`. To realize this data transfer e.g. for an upload of data via drag & drop, a detailed knowledge about the File API is necessary. More information can be found here [W3C](https://www.w3.org/TR/FileAPI/).
 
 
-# 5.
+# 5. Web Storage - Databases for offline applications
+The Web Storage can store data locally in the user's web browser and read it out again. No database is created for storing the data; instead, simple key-value pairs are stored. The data is stored either without a fixed duration (*Local Storage*) or for the duration of a session (*Session Storage*).
+*Local Storage* and *Session Storage* are usually integrated into the web browser as alternatives to *Cookies*. This allows data to be stored, changed or deleted when the user is not online.
+Web Storage supports two types of objects, `localStorage` and `sessionStorage`, to store data in the web browser. Both objects have the same methods and properties, but differ in the duration of validity.
 
+|                | Local Storage            | Session Storage             | Cookies                             |
+| -------------- | ------------------------ | --------------------------- | ----------------------------------- |
+| Storage Size   | 5 - 10 MB                | 5 - 10 MB                   | 4 KB                                |
+| Lifetime       | Unlimited                | Close page                  | Unlimited/Limited                   |
+| Validity Range | All browser windows/tabs | A single browser window/tab | All browser windows/tabs per domain |
+| Delete         | From JavaScript or when the browser cache is emptied | Automatically when the browser window is closed | Durability is set when a cookie is created |
 
