@@ -1159,3 +1159,24 @@ Web Storage supports two types of objects, `localStorage` and `sessionStorage`, 
 | Validity Range | All browser windows/tabs | A single browser window/tab | All browser windows/tabs per domain |
 | Delete         | From JavaScript or when the browser cache is emptied | Automatically when the browser window is closed | Durability is set when a cookie is created |
 
+Whether the browser supports `localStorage` and `sessionStorage` can be checked this way:
+
+  ```
+   if (typeof(Storage) !== "undefined") {
+    // Web Storage is supported.
+   } else {
+    // The web browser is not capable of web storage.
+   }
+  ```
+
+The `typeof` operator can perform type checking. The support of web storage in the modern web browsers is quite good.
+
+Common methods used for seating, reading and deleting data in the web browser with `localStorage` and `sessionStorage`: 
+
+| Method                 | Description    |
+| ---------------------- | -------------- |
+| `setItem(key, value);` | Stores a `key-value` pair as an element in the `localStorage` or `sessionStorage` object. |
+| `getItem(key);`        | This reads the value (`value`) from the `key` of the `localStorage` or `sessionStorage` object and returns it. |
+| `removeItem(key);`     | Deletes the `key-value` pair entry with the `key` key from the `localStorage` or `sessionStorage` object. |
+| `clear();`             | Clears the memory in the web browser. |
+
