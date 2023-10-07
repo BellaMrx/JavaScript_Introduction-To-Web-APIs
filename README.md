@@ -1421,5 +1421,49 @@ Using web APIs often also means intensive use of JavaScript. The processing powe
 A *single-threaded program* can only be executed in one piece and cannot be broken down into several small tasks. *Multi-threading* is when you want to split a program into several jobs or threads and then run them in parallel within the program. A real parallel execution becomes possible with several processor cores.
 
 
+For the Web APIs, you have a tool in the form of Web Workers to run more intensive and longer JavaScript tasks in the background so that the user doesn't notice anything.
+
+Example: 
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_18) --> **Examples/Part_18/...** 
+
+index.html:
+  ```
+   <body onload="startTimer()">
+     <h1>Web Worker in use</h1>
+     <div id="worker_1"></div>
+     <div id="worker_2">Waiting for work ...</div>
+     <button onclick="startWork()">Start intensive calculation</button>
+     <script src="idle.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   function startTimer() {
+     setInterval(function() { document.querySelector('#worker_1').innerHTML = Date.now(); }, 1);
+   }
+
+   function startWork() {
+     var out = document.querySelector('#worker_2');
+     out.innerHTML = "Calculation is performed ...";
+     out.className = "calc";
+
+     // 70 million x loop 500 times
+     for (var i = 0; i < 70000000; i++) {
+        for (var j = 0; j < 500; j++) {
+            // just wasting time
+        }
+     }
+     out.innerHTML = "Finished with the calculation!";
+     out.className = "done";
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-18.png" width="400">
+
+
+
+
 
 
