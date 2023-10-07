@@ -31,8 +31,9 @@
     - 4.7. Handle other events during the drag and drop process
     - 4.8. Further notes on Drag & Drop API
  5. Web Storage - Databases for offline applications
-    - Realize cookies with JavaScript
-
+    - 5.1. Realize cookies with JavaScript
+    - 5.2. Cookies vs. Web Storage
+    - 5.3. More offline technologies
 
 
 ---------------------------------------------
@@ -1244,3 +1245,119 @@ If the data should not be stored permanently but only temporarily, then only `lo
 
 
 ## 5.1. Realize cookies with JavaScript
+Cookies are text information that is stored locally in the web browser when a website or a specific action is called up. As information, data is often stored to recognize the user on a return visit. Cookies are also used to analyze surfing behavior, and also when several steps are performed on a website(e.g. adding a product to the shopping cart). Since cookies can only be 4,096 bytes in size, the amount of data that can be stored is limited.
+But it is possible to create multiple cookies per domain. The RFC standard (RFC 6265) specifies at least 50 cookies per domain. Many web browsers allow more.
+
+To create a cookie, there is the property `document.cookie`:
+
+  ```
+   document.cookie = "user=Bella Mrx";  // Cookie set
+   console.log(document.cookie);        // Cookie output
+   let myCookie = document.cookie;      // Read out cookie
+  ```
+
+In this example a *Session cookie* was created because no specified time was given for the cookie to expire. *Session cookies* expire as soon as the active browser window is closed, this is useful when a login is finished as soon as the browser window is closed.
+
+*Session Cookie* with expiration time:
+  ```
+   document.cookie = "user=Bella Mrx; expires=Sun, 6 Oct 2023 18:00:00 UTC";
+  ```
+
+This cookie will be deleted on October 6, 2023 at 6 pm. 
+
+It is also possible to create multiple cookies for a website:
+
+  ```
+   document.cookie = "user=Bella Mrx; expires=Sun, 6 Oct 2023 18:00:00 UTC";
+   document.cookie = "trackID=123456e789; path=/";
+  ```
+
+Here two cookies were created. The `path` attribute specifies the path to which web page the cookie belongs. The first cookie named `user` is a cookie with expiration date, and the second cookie `trackID` is a *session cookie*.
+
+Besides the name-value pair for the actual data, the expiration date and the path of the cookie, there are a few more properties that can be used with a cookie:
+
+| Values           | Description |
+| ---------------- | -------------- |
+| Key Value Pair   | This is the most important entry in the cookie with the actual information. The name is case sensitive. This entry must be present in the cookie, all others are optional. |
+| Domain and Path  | Here you specify the domain of the server and the path on the server from which the cookie should be sent. |
+| Expiration Date  | This specifies the date on which the cookie should be automatically deleted and thus no longer sent to the server. If no expiration date is used it is a *session cookie*. |
+| Secure, HttpOnly | Secure specifies whether a cookie should only be sent with secure SSL connections (*https*) to prevent sending via *http*. HttpOnly, on the other hand, can be used to prevent the cookie from being accessed via JavaScript. |
+
+Example: 
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_16) --> **Examples/Part_16/...** 
+
+index.html:
+  ```
+    <h1>Cookies in use</h1>
+    <div class="loadData"></div>
+    <form class="form">
+        Last name: <input type="text" id="val1" value=""> 
+        <br>
+        First name: <input type="text" id="val2" value="">
+        <br><br> <input type="checkbox" id="cookie4ever"> Save cookie permanently
+        <p>
+            <button onclick="setCookie()">Set cookie</button>
+        </p>
+    </form>
+    <script src="script.js"></script>
+  ```
+
+script.js:
+  ```
+   let user = getCookie("user"); // Is a cookie already set?
+   let welcome = user ? user : "User";
+   document.querySelector('.loadData').innerHTML += "Hello " +
+     welcome + "! Welcome to the website.";
+
+   // How long should the cookie be stored (days)?
+   const expires_cookie = 2;
+   const path = ";path=/";
+
+   function setCookie() {
+     let lname = document.querySelector('#val1').value;
+     let fname = document.querySelector('#val2').value;
+     if (!(lname || fname)) {
+        alert("Error: Empty name fields")
+        return null;
+     }
+     let saveCookie = document.querySelector('#cookie4ever').checked;
+     let expires = "";
+     if (saveCookie) {
+        let date = new Date();
+        date.setTime(date.getTime() + (expires_cookie * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+     }
+     document.cookie = "user=" + fname + " " + lname + expires + path;
+   }
+
+   function getCookie(cname) {
+     let _cname = cname + "=";
+     let cookieData = document.cookie.split(";");
+     for (let i = 0; i < cookieData.length; i++) {
+        let c = cookieData[i];
+        while (c.charAt(0) == ' ')
+            c = c.substring(1, c.length);
+        if (c.indexOf(_cname) == 0)
+            return c.substring(_cname.length, c.length);
+     }
+     return null;
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-16.PNG" width="800"> 
+
+First it is checked whether a cookie is already set for the web page. It is then read out with `getCookie()` if necessary, in order to use the name in the welcome text. The function `setCookie()` is executed when the corresponding button is clicked. Here the first name and the last name are used as value for the key `user`.
+
+#### Delete a cookie with JavaScript
+To delete a cookie with JavaScript, simply set the expiration date to a date in the past.
+
+
+## 5.2. Cookies vs. Web Storage
+Cookies are suitable for storing only a small amount of information. With web storage, more memory can be used. It is possible to set multiple cookies, but the disadvantage is that the effort to set and read cookies is much more complex. For fast and frequent storing and querying, the Web Storage is more suitable.
+Another difference is that the information in the cookie is also sent to the server with each request to the server. Web Storage, on the other hand, is only used locally in the web browser. Here it must be considered whether this is also needed. On the one hand, it affects the traffic and on the other hand, data is transferred unencrypted in the HTTP protocol, if the HTTPS protocol is not or cannot be used, this also represents a security risk.
+
+
+## 5.3. More offline technologies
+
+
