@@ -31,6 +31,7 @@
     - 4.7. Handle other events during the drag and drop process
     - 4.8. Further notes on Drag & Drop API
  5. Web Storage - Databases for offline applications
+    - Realize cookies with JavaScript
 
 
 
@@ -1237,6 +1238,9 @@ In this example, a name can be entered that can be permanently saved in the web 
 
 Current state of Local Storage in Firefox developer tool:
 
- <img src="Images/LocalStorageBrowserView.PNG" width="700">
+ <img src="Images/LocalStorageBrowserView.PNG" width="800">
 
 If the data should not be stored permanently but only temporarily, then only `localStorage` must be replaced by `sessionStorage`.
+
+
+## 5.1. Realize cookies with JavaScript
