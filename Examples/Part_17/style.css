@@ -1,0 +1,31 @@
+.form { 
+    width: 30em;
+	background: lightcyan;
+	border: 1px solid black;
+	padding: 1em;
+}
+
+input {
+    margin: 0.5em;
+}
+
+div {
+  margin-bottom: 1.5em;
+}
+
+.offline { 
+    background: orangered; 
+}
+
+.online {
+    background: lightgreen; 
+}
+div, p {
+    width: 30em; 
+}
+
+div { 
+	background: paleturquoise;
+	border: 1px solid black;
+	padding: 1em;
+}

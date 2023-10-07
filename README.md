@@ -34,6 +34,9 @@
     - 5.1. Realize cookies with JavaScript
     - 5.2. Cookies vs. Web Storage
     - 5.3. More offline technologies
+    - 5.4. Check the user's Internet connection 
+ 6. Web Workers
+    - 
 
 
 ---------------------------------------------
@@ -1359,5 +1362,64 @@ Another difference is that the information in the cookie is also sent to the ser
 
 
 ## 5.3. More offline technologies
+Besides *Local Storage*, *Session Storage* and *Cookies* there are two more offline technologies. These are *Web SQL* and *IndexedDB*.
+
+The *Web SQL* database corresponds in scope and structure to a real relatinal SQL database. The purpose is to integrate a SQLite based database into the web browser and perform the SQL queries via JavaScript. Although some web browsers still support this technology, it could disappear from web browsers at any time, and therefore it is not really useful to deal with it in practice. 
+
+This leaves only *IndexedDB*, which are indexed databases. *IndexedDB* also uses a simple key-value mapping of the data and handles indexing like a relational database, and it can also store other data types and not just strings.
+More information about [Indexed Database API](https://www.w3.org/TR/IndexedDB/) here.
+
+#### File API
+The File API is not really an offline application, but with it it is possible to read local files with JavaScript. But with this it is not possible to access arbitrary local files, but only files which are read in e.g. by the user with a form with `<input type="file">`.
+
+
+## 5.4. Check the user's Internet connection 
+Whether the user is currently online or offline can be checked with the `navigator.onLine` property. If the value is `false`, the user is offline, and if the value is `true`, the user is online (the state cannot always be determined 100% reliably).
+When the property `navigator.onLine` changes its state, the events *online* (`true`) or *offline* (`false`) are fired. To check the state, `addEventListener()` must listen for the `online` or `offline` events and respond accordingly with an event handler.
+
+Example: 
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_17) --> **Examples/Part_17/...** 
+
+index.html:
+  ```
+   <body>
+     <h1>Offline or online</h1>
+     <div class="online">Online</div>
+     <script src="script.js"></script>
+   </body>
+  ```
+
+script.js:
+  ```
+   function offon() {
+     if (!navigator.onLine) {
+        document.querySelector('.loadData').innerHTML = "Offline";
+        document.querySelector('.loadData').className = "offline";
+     } else {
+        document.querySelector('.loadData').innerHTML = "Online";
+        document.querySelector('.loadData').className = "online";
+     }
+   }
+
+   window.onload = function() {
+     if (document.addEventListener) {
+        window.addEventListener("online", offon, false);
+        window.addEventListener("offline", offon, false);
+     }
+     offon();
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-17.png" width="400"> 
+
+
+# 6. Web Workers
+Using web APIs often also means intensive use of JavaScript. The processing power of JavaScript can be high, despite aleem it remains simple *single thread programming*. If larger amounts of data are queried via an API and the DOM is manipulated at the same time, this can delay the loading time of a web page, or simply throw up an error message.
+
+#### Single-Threading und Multi-Threading
+A *single-threaded program* can only be executed in one piece and cannot be broken down into several small tasks. *Multi-threading* is when you want to split a program into several jobs or threads and then run them in parallel within the program. A real parallel execution becomes possible with several processor cores.
+
+
 
 
