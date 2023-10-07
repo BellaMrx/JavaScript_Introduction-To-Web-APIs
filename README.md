@@ -1180,3 +1180,63 @@ Common methods used for seating, reading and deleting data in the web browser wi
 | `removeItem(key);`     | Deletes the `key-value` pair entry with the `key` key from the `localStorage` or `sessionStorage` object. |
 | `clear();`             | Clears the memory in the web browser. |
 
+The values of the types can actually be arbitrary, but are all stored as string. If numeric values were stored, the numbers must be converted again after reading, with integers with `let a = parseInt(String)` or with floating point numbers with `let b = parseFloat(String)`.
+
+The use of `localStorage`:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_15) --> **Examples/Part_15/...** 
+
+index.html:
+  ```
+    <h1>Web Storage in use</h1>
+    <div class="loadData"></div>
+    <form class="form">
+        Last name: <input type="text" id="val1" value="">
+        <br> 
+        First name: <input type="text" id="val2" value="">
+        <p>
+            <button onclick="saveValue()">Save</button>
+            <button onclick="clearStorage()">Clear storage</button>
+        </p>
+    </form>
+    <script src="script.js"></script>
+  ```
+
+script.js:
+  ```
+   if (typeof(Storage) != "undefined") {
+     let lname = localStorage.getItem("lname");
+     let fname = localStorage.getItem("fname");
+     if (lname == null) { lname = "User"; }
+     if (fname == null) { fname = ""; }
+     document.querySelector('.loadData').innerHTML += "Hello " +
+        lname + " " + fname + "! Welcome to the website.";
+   } else {
+     document.querySelector('.loadData').innerHTML = "Your web browser does not support web storage!";
+   }
+
+   function saveValue() {
+     if (typeof(Storage) != "undefined") {
+        window.localStorage.setItem('lname', document.querySelector('#val1').value);
+        window.localStorage.setItem('fname', document.querySelector('#val2').value);
+     } else {
+        alert("Your web browser does not support Web Storage!")
+     }
+   }
+
+   function clearStorage() {
+     window.localStorage.clear();
+     //window.localStorage.removeItem("lname");
+     //window.localStorage.removeItem("fname");
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-15a.png" width="400"> <img src="Images/WebAPI_Part-15b.png" width="400">
+
+In this example, a name can be entered that can be permanently saved in the web browser. That the data has been saved can be recognized by the greeting on the web page, even offline or the web browser is closed and reopened.
+
+Current state of Local Storage in Firefox developer tool:
+
+ <img src="Images/LocalStorageBrowserView.PNG" width="700">
+
+If the data should not be stored permanently but only temporarily, then only `localStorage` must be replaced by `sessionStorage`.
