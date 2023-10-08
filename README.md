@@ -1462,6 +1462,126 @@ script.js:
 
  <img src="Images/WebAPI_Part-18.png" width="400">
 
+In the example, a simple timer runs in the web browser, returning a time in miliseconds that has passed since 01/01/1970 at 00:00:00 UTC. The timer is continuously updated every milisecond using `setInterval()`. This is demanding on the web browser, but it should be manageable.
+Only when the `Start intensive calculation` button is clicked, the `startWork()` function is started, and here the script blocks the web browser. On the one hand the running timer is stopped or blocked. Also the status message `Calculation is performed ...` and the class assignment with CSS are not used.
+The intensive calculation is only simulated with a loop (700 million x 500), so that the web browser comes to its limits (if not then simply increase the values step by step).
+Some web browsers give a known error message that the web page is no longer responding, and a query is made whether the page should continue to run or not.
+This blocking of the web browser can not be done to the user, and for such cases there is *Web Workers*.
+
+Whether the web browser can handle web workers can be tested if the object 'Worker' is undefined:
+
+  ```
+   if (typeof(Worker) == "undefined") {
+       // The web browser does not support web worker ...
+   } else {
+       // The web browser knows Web Workers.
+     }
+  ```
+
+If the web browser can handle Web Workers, a Web Workers object can be created. This Web Worker does the work in the background without blocking the user interface or preventing other scripts from working. This code must therefore be stored in a separate script.
+
+  ```
+   ...
+   let w = undefined;
+   ...
+   if (w === undefined) {
+     w = new Worker("work.js");
+   }
+   ...
+  ```
+
+Here it is first checked whether the Web Worker does not already exist, before a new `worker` object can be created with `new`, which downloads the JavaScript file ansynchronously, reads it in and is then ready for execution.
+
+A Web Worker has certain limitations and communication between the Web Worker and the Web Browser is done via messages. With the method `postMessage()` you can send single messages to the Worker and also send messages from the Web Worker. 
+
+  ```
+   postMessage("One message");
+  ```
+
+The message exchange can be done as a usual string. Newer web browsers can also handle passing data in the form of a *JSON* object.
+
+Listening to this message can be done in practice with an event listener `onmessage`:
+
+  ```
+   w.onmessage = function(event) {
+     console.log("The message is: " + event.data);
+   }
+  ```
+
+Now here is the complete example with Web Workers:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_19) --> **Examples/Part_19/...** 
+
+index.html:
+  ```
+    <h1>Web Worker in use</h1>
+    <div id="worker_1"></div>
+    <div id="worker_2">Web Worker 1: Waiting for work ...</div>
+    <button onclick="startWork()">Start intensive calculation</button>
+    <button onclick="stopWork()">Cancel calculation</button><br><br>
+    <div id="worker_3">Web Worker 2</div>
+    <input type="text" id="msg" size="30">
+    <button onclick="heyWorker()">Message to the Worker</button>
+    <script src="scripts/webworker.js"></script>
+  ```
+
+script.js:
+  ```
+   let w;
+   let out = document.querySelector('#worker_2');
+
+   function startTimer() {
+     setInterval(function() { document.querySelector('#worker_1').innerHTML = Date.now(); }, 1);
+   }
+
+   function startWork() {
+     if (typeof(Worker) == "undefined") {
+        out.innerHTML = "Your web browser does not support web workers!";
+     } else {
+        out.innerHTML = "Calculation is performed ...";
+        out.className = "calc";
+        if (w == undefined) {
+            w = new Worker("scripts/work.js");
+        }
+        w.onmessage = function(event) {
+            out.innerHTML = event.data;
+            out.className = "done";
+        }
+        w.onerror = function(event) {
+            out.innerHTML = event.message;
+            out.className = "quit";
+        }
+     }
+   }
+
+   function stopWork() {
+     if (w != undefined) {
+        w.terminate();
+        w = undefined;
+        out.innerHTML = "Calculation was aborted prematurely!";
+        out.className = "quit";
+     }
+   }
+
+   function heyWorker() {
+     let out2 = document.querySelector('#worker_3');
+     let w2;
+     if (w2 == undefined) {
+        w2 = new Worker("scripts/work2.js");
+     }
+     w2.onmessage = function(event) {
+        out2.innerHTML = event.data;
+        out2.className = "done";
+     }
+     w2.onerror = function(event) {
+        out2.innerHTML = event.message;
+        out2.className = "quit";
+     }
+     w2.postMessage(document.querySelector('#msg').value);
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-19.png" width="400">
 
 
 
