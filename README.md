@@ -1607,6 +1607,7 @@ work2.js:
 
  <img src="Images/WebAPI_Part-19.png" width="400">
 
+The specification of `self` is a reference to the global web worker object itself.
 
 
 
