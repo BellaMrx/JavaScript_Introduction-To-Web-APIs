@@ -36,7 +36,12 @@
     - 5.3. More offline technologies
     - 5.4. Check the user's Internet connection 
  6. Web Workers
-    - 
+ 7. Update without requests with server sent events
+ 8. More Web-APIs
+    - 8.1. Real-time communication with the WebSockets
+    - 8.2. Voice and video telephony with WebRTC 
+    - 8.3. 3D graphics and games with WebGL
+    - 8.4. File API and local files
 
 
 ---------------------------------------------
@@ -1595,7 +1600,7 @@ work.js:
   ```
 
 In addition, the function `stopWork()` has been added, which makes it possible to terminate the Web Worker prematurely with the script *work.js*. An early termination can be achieved with the `terminate()` method via the main document. If the Web Worker is to be terminated within the Worker itself, the `self.close()` method can be used. To be able to use the worker again it was set to `undefined` after termination.
-There is also a second script *work2.js* that can be executed at any time, even if the other worker with the script *work.js* is already running. This worker demonstrates how to send a message to the worker with `postMessage()` and to listen to this message in the worker with the script *work2.js*:
+There is also a second script *work2.js* that can be executed at any time, even if the other worker with the script *work.js* is already running. This worker demonstrates how to send a message to the worker with `postMessage()` and to listen to this message in the worker with the script *work2.js*. The specification of `self` is a reference to the global web worker object itself:
 
 work2.js:
   ```
@@ -1607,7 +1612,239 @@ work2.js:
 
  <img src="Images/WebAPI_Part-19.png" width="400">
 
-The specification of `self` is a reference to the global web worker object itself.
+
+A web worker cannot access all functions because of the problems that could occur when using multiple threads. It is not possible to access the DOM directly. If the DOM is to be accessed, a message must be sent to the parent document with the Web Worker, and the message must be evaluated. 
+There is no access with the Web Workers to:
+ - the DOM tree
+ - the `window` object
+ - the `document` object
+ - the `parent` object
+
+These options are available with Web Workers:
+ - `postMessage()` to send and listen to incoming messages
+ - `close()` to terminate the current Web Worker
+ - `self` as reference to the global Web Workers object itself
+ - creating additional Web Workers
+ - import external scripts with `importScripts('script.js')`
+ - the `XMLHttpRequest` object for Ajax requests
+ - timers like `setInterval()`, `setTimeout()`, `clearInterval()` and `clearTimeout()`
+ - the `navigator` object
+ - the `location` object with the URL of the script executed by the Web Worker
+
+Web Workers are only used for CPU intensive work. When an intensive image manipulation or image storage(canvas), an analysis of video files, spell checks, translations or a large database update.
+
+More information about Web Workers can be found here [HTML Living Standard](https://html.spec.whatwg.org/multipage/#toc-workers).
+
+
+# 7. Update without requests with server sent events
+Server Sent Events (SSE) can be used to ensure that a website automatically receives an update from the server without having to make an explicit request. The communication takes place via messages. Examples of this are real-time transmissions of stock market prices, live updates from Facebook or X(Twitter), any live monitoring of statistics and live data of all kinds, news feed, updates of prices or sports results(liveticker). This technology is real *server push technology*, where the web browser keeps open a unidirectional HTTP connection to the server.
+
+Whether the web browser masters SSE can be checked in this way:
+
+  ```
+   if (typeof(EventSource) !== "undefined") { 
+     // SSE are supported
+   } else {
+     // SSE are not supported
+   }
+  ```
+
+Example: 
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_20) --> **Examples/Part_20/...** 
+
+index.html:
+  ```
+    <h1>SSE in use</h1>
+    <div id="output">Waiting for updates ...</div>
+    <script src="script.js"></script>
+  ```
+
+script.js:
+  ```
+   let out = document.querySelector('#output');
+
+   if (typeof(EventSource) !== "undefined") {
+     let sse = new EventSource("sse.php");
+     sse.onmessage = function(event) {
+        out.innerHTML = "Message: " + event.data;
+        /*var dat = JSON.parse(event.data);
+        out.innerHTML = dat.msg + ": " + dat.time + " - " + dat.val;*/
+     }
+   } else {
+     out.innerHTML = "Your web browser cannot handle server-sent events.";
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-20a.png" width="400"> 
+
+The PHP script was passed along with the `EventSource` object: 
+
+sse.php:
+  ```
+   <?php
+   header('Content-Type: text/event-stream');
+   header('Cache-Control: no-cache');
+
+   $time = time();
+   $val = mt_rand(100, 999);
+
+   /*echo "data: {\n";
+   echo "data: \"msg\": \"New update is there\" ,  \n";
+   echo "data: \"time\": \"$time\", \n";
+   echo "data: \"val\": $val\n";
+   echo "data: }\n\n";*/
+
+   echo "retry: 15000\n"; // every 15 seconds 
+   echo "data: ($val) New update is there {$time}\n\n";
+   flush();
+   ?>
+  ```
+
+ <img src="Images/WebAPI_Part-20b.png" width="400"> 
+
+In this example nothing else is done than every 15 seconds a random number and a time stamp is sent as a message to the web page, where with `onmessage` waits for the message and evaluates it.
+
+
+# 8. More Web-APIs
+New web APIs are added all the time, so it is impossible to cover them all.
+
+## 8.1. Real-time communication with the WebSockets
+With *WebSockets* it is possible to create a real time based web application using a directional communication of the TCP connection. The connection is between a server and the client(the web browser). 
+
+WebSockets can be used wherever low latency is required between the server and the client. Is suitable for:
+ - Chat applications
+ - Online games with multiple players
+ - Financial applications 
+ - live tickers
+ - real-time broadcasting of social streams
+ - any monitoring of websites or other applications on the web
+
+More information about WebSockets can be found here [DEV](https://dev.to/adroitgroup/the-power-of-websocket-revolutionizing-real-time-communication-on-the-web-40jk).
+
+
+## 8.2. Voice and video telephony with WebRTC 
+*WebRTC* (Web Real Time Communication) is an open source standard for real-time communication like voice and video telephony and can be used natively in the web browser without extensions like plug-ins or add-ons. The encrypted video and audio stream can be transmitted directly from web browser to web browser (peer-to-peer) and does not require a streaming server in between.
+
+More information about WebSockets can be found here:
+ - [WebRTC](https://webrtc.org/)
+ - [GitHub](https://webrtc.github.io/samples/)
+
+
+## 8.3. 3D graphics and games with WebGL
+With *WebGL* you can display hardware accelerated 3D graphics in the web browser without extensions. WebGL is based on OpenGL ES and was developed on the basis of JavaScript as a license-free standard.
+
+More information about WebGL can be found here:
+ - [WebGL](https://www.khronos.org/webgl/)
+ - [MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Tutorial/Getting_started_with_WebGL)
+
+
+## 8.4. File API and local files
+The File API can be used when dealing with local files. As interface for accessing local files there is `File` for read-only information of a single file, `FileList` for a whole list of `File` objects and `Blob` for setting a file in byte ranges. In order to be able to read the data structure of `File`, `FileList` or `Blob` asynchronously, as is typical for JavaScript, there is an additional interface with `FileReader`.
+
+Using `<input type="file" multiple>`, multiple files can be selected, of which individual information such as the file name, file type and file size are subsequently to be output using `FileList`.
+
+Example:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_21) --> **Examples/Part_21/...** 
+
+index.html:
+  ```
+     <h1>File API in use</h1>
+    <p>Select file(s):
+        <input type="file" id="myfiles" name="myfiles" multiple="">
+    </p>
+    <p class="output"></p>
+    <script src="script.js"></script>
+  ```
+
+script.js:
+  ```
+   if (window.FileReader && window.FileList) {
+     let myfiles = document.querySelector('#myfiles');
+     let output = "Your selected files:<br>";
+     myfiles.onchange = function(event) {
+        let flist = event.target.files;
+        for (let i = 0; flist[i] != null; i++) {
+            output += flist[i].name + ": " +
+                "(" + flist[i].type + ") " +
+                flist[i].size + " Bytes<br>";
+        }
+        document.querySelector('.output').innerHTML = output;
+     }
+   } else {
+     console.log("Your web browser does not support the File API.");
+   }
+  ```
+
+ <img src="Images/WebAPI_Part-21.png" width="400"> 
+
+In `myfiles` a list of selected files, which were selected in the form and can be retrieved via `event.target-files` is stored. The `myfiles` object is a `FileList` type object.` `name`, `type` or `size` are properties provided by the interface of the `FileList` object.
+
+If the contents of the files are to be read in and output instead of the information, the interface of the `FileReader` object must be used.
+
+Example:
+
+  [Complete Code](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs/tree/main/Examples/Part_22) --> **Examples/Part_22/...** 
+
+script.js:
+  ```
+   if (window.FileReader && window.FileList) {
+     let myfiles = document.querySelector('#myfiles');
+     let output = document.querySelector('.output');
+     myfiles.onchange = function(event) {
+        let flist = event.target.files;
+        for (let i = 0; flist[i] != null; i++) {
+            if (flist[i].type.match("image.*")) {
+                let fread = new FileReader();
+                fread.onload = (function(file) {
+                    return function(event) {
+                        let elem = document.createElement("p");
+                        let img = document.createElement("img");
+                        img.setAttribute("src", event.target.result);
+                        img.setAttribute("height", 100);
+                        elem.appendChild(img);
+                        output.appendChild(elem);
+                    };
+                })(flist[i]);
+                fread.readAsDataURL(flist[i]);
+            }
+        }
+     }
+   } else {
+     alert("Your web browser does not support the File API.");
+   }
+  ```
+
+
+--------------------------------------------------------------------------------------------
+
+## The end
+
+If you don't know HTML, CSS or JavaScript yet, have a look here:
+  - [WebDevelopment Basics](https://github.com/BellaMrx/WebDevelopment_Basics) - Basics Guide for web developers
+  - [HTML Guide](https://github.com/BellaMrx/HTML_Guide) - Detailed guide about HTML5 (all basics for HTML)
+  - [HTML Cheat Sheets](https://github.com/BellaMrx/HTML_Cheat_Sheets) - All HTML5 elements and their attributes
+  - [CSS Guide](https://github.com/BellaMrx/CSS_Guide) - Detailed guide about CSS (Introduction to CSS, CSS Selectors, Inheritance and the cascade, CSS Box Model, CSS Positioning, Flexbox, Responsive Web Design, CSS Grid Layout, Styling with CSS, Testing and Organizing) 
+  - [Sass and SCSS Basic Guide](https://github.com/BellaMrx/Sass_and_SCSS) - An introduction to the CSS preprocessor Sass
+
+  **JavaScript Basics:**
+
+  1. [JS Introduction](https://github.com/BellaMrx/JS_introduction) - An introduction to JavaScript
+  2. [Arrays, functions, objects in JS](https://github.com/BellaMrx/Arrays_functions_objects_in_JS) - Introduction: Arrays, functions and objects in JavaScript
+  3. You are here --> [DOM - Document Object Model](https://github.com/BellaMrx/DOM_Document-Object-Model) -  Introduction to the **DOM** and the **DOM** manipulation - Change web pages dynamically  
+  4. You are here --> JavaScript_Introduction-To-Web-APIs
+
+Or just visit my GitHub profile, you can find all guides/tutorials there [BellaMrx](https://github.com/BellaMrx)
+
+Thanks for the attention.
+
+#### This is the end, beautiful friend... ;)
+
+
+
+
+
 
 
 

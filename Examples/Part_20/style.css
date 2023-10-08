@@ -1,0 +1,16 @@
+div { 
+    width: 30em;
+	background: lightcyan;
+	border: 1px solid black;
+	padding: 1em;
+}
+
+.calc { 
+    background: lightcoral; 
+}
+.done { 
+    background: lightgreen; 
+}
+.quit { 
+    background: red; 
+}
