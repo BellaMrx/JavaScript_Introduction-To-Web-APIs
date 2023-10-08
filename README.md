@@ -1525,7 +1525,7 @@ index.html:
     <script src="scripts/webworker.js"></script>
   ```
 
-script.js:
+webworker.js:
   ```
    let w;
    let out = document.querySelector('#worker_2');
@@ -1578,6 +1578,30 @@ script.js:
         out2.className = "quit";
      }
      w2.postMessage(document.querySelector('#msg').value);
+   }
+  ```
+
+When the `Start intensive calculation` button is clicked, the timer continues to run and the status message is also changed to `Calculation is performed ...`. The loop run is executed in the background using a web worker and the `work.js` script.
+Immediately after the web worker is started using the `work.js` script, an event listener can be created using `w.onmessage` to wait for a message from the web worker.
+
+work.js:
+  ```
+   for (let i = 0; i < 70000000; i++) {
+     for (let j = 0; j < 50; j++) {
+        // just wasting time
+     }
+   }
+   postMessage("Finished with the calculation!");
+  ```
+
+In addition, the function `stopWork()` has been added, which makes it possible to terminate the Web Worker prematurely with the script *work.js*. An early termination can be achieved with the `terminate()` method via the main document. If the Web Worker is to be terminated within the Worker itself, the `self.close()` method can be used. To be able to use the worker again it was set to `undefined` after termination.
+There is also a second script *work2.js* that can be executed at any time, even if the other worker with the script *work.js* is already running. This worker demonstrates how to send a message to the worker with `postMessage()` and to listen to this message in the worker with the script *work2.js*:
+
+work2.js:
+  ```
+   self.onmessage = function(event) {
+     let msg = "Message received:" + event.data;
+     postMessage(msg);
    }
   ```
 
