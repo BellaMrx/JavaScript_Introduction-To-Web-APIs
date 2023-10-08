@@ -363,7 +363,7 @@ script.js:
 
 Output:
 
- <img src="Images/WebAPI_Part-6.png" width="500">
+ <img src="Images/WebAPI_Part-6.png" width="400">
 
 This is a general algorithm for manipulating images, like other image editors use to invert images. In this and similar ways a lot of effects can be created. The image object can also be used from an `img` element in the document.
 
@@ -603,7 +603,7 @@ How the determination works also depends on the device used. For a local desktop
 #### Privacy and security
 Determining the location of a user is quite easy nowadays. However, it is not possible to locate visitors to a website to the nearest meter. You can't get location data without the explicit consent of the visitor. In most web browsers there is a query. How the web browser stores this consent or refusal varies, but can be reversed at any time.
 
- <img src="Images/GelocationAPI_Agreement.PNG" width="600">
+ <img src="Images/GelocationAPI_Agreement.PNG" width="700">
 
 More information about the security rules and the Geolocation API can be found here [W3C](https://w3c.github.io/geolocation-api/).
 
@@ -1816,6 +1816,10 @@ script.js:
    }
   ```
 
+ <img src="Images/WebAPI_Part-22.png" width="400"> 
+
+### Overview of all web APIs
+An overview of the individual APIs and their status can be found here [APIsList](https://apislist.com/).
 
 --------------------------------------------------------------------------------------------
 
@@ -1833,7 +1837,7 @@ If you don't know HTML, CSS or JavaScript yet, have a look here:
   1. [JS Introduction](https://github.com/BellaMrx/JS_introduction) - An introduction to JavaScript
   2. [Arrays, functions, objects in JS](https://github.com/BellaMrx/Arrays_functions_objects_in_JS) - Introduction: Arrays, functions and objects in JavaScript
   3. You are here --> [DOM - Document Object Model](https://github.com/BellaMrx/DOM_Document-Object-Model) -  Introduction to the **DOM** and the **DOM** manipulation - Change web pages dynamically  
-  4. You are here --> JavaScript_Introduction-To-Web-APIs
+	4. You are here --> [Introduction to Web APIs](https://github.com/BellaMrx/JavaScript_Introduction-To-Web-APIs)
 
 Or just visit my GitHub profile, you can find all guides/tutorials there [BellaMrx](https://github.com/BellaMrx)
 
