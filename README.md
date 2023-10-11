@@ -1750,7 +1750,7 @@ Example:
 
 index.html:
   ```
-     <h1>File API in use</h1>
+    <h1>File API in use</h1>
     <p>Select file(s):
         <input type="file" id="myfiles" name="myfiles" multiple="">
     </p>
