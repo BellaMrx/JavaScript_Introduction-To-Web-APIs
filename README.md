@@ -647,7 +647,7 @@ Output:
 
  <img src="Images/WebAPI_Part-9.png" width="400">
 
-When the button is clicked, the function `geMyLocation()` is called, where first it is checked if `navigator.geolocation` is equal to `true` and thus the API can be used. Then the `getCurrentPosition()` method of the API starts. On first use, the user's consent should be obtained. If consent is given and the `getCurrentPosition()` method is executed successfully, a coordinate object is returned which is passed as a parameter to the callback function set up here with `showPosition()`. This coordinate object is used in the `showPosition` callback function to output the determined data (latitude, longitude).
+When the button is clicked, the function `getMyLocation()` is called, where first it is checked if `navigator.geolocation` is equal to `true` and thus the API can be used. Then the `getCurrentPosition()` method of the API starts. On first use, the user's consent should be obtained. If consent is given and the `getCurrentPosition()` method is executed successfully, a coordinate object is returned which is passed as a parameter to the callback function set up here with `showPosition()`. This coordinate object is used in the `showPosition` callback function to output the determined data (latitude, longitude).
 
 There are more properties than `coords.latitude` and `coords.longitude`:
 
