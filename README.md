@@ -1420,7 +1420,7 @@ script.js:
 
 
 # 6. Web Workers
-Using web APIs often also means intensive use of JavaScript. The processing power of JavaScript can be high, despite aleem it remains simple *single thread programming*. If larger amounts of data are queried via an API and the DOM is manipulated at the same time, this can delay the loading time of a web page, or simply throw up an error message.
+Using web APIs often also means intensive use of JavaScript. The computational power of JavaScript can be high, despite everything it remains a simple *single thread programming*. If larger amounts of data are queried via an API and the DOM is manipulated at the same time, this can delay the loading time of a web page, or simply throw up an error message.
 
 #### Single-Threading und Multi-Threading
 A *single-threaded program* can only be executed in one piece and cannot be broken down into several small tasks. *Multi-threading* is when you want to split a program into several jobs or threads and then run them in parallel within the program. A real parallel execution becomes possible with several processor cores.
@@ -1467,7 +1467,7 @@ script.js:
 
  <img src="Images/WebAPI_Part-18.png" width="400">
 
-In the example, a simple timer runs in the web browser, returning a time in miliseconds that has passed since 01/01/1970 at 00:00:00 UTC. The timer is continuously updated every milisecond using `setInterval()`. This is demanding on the web browser, but it should be manageable.
+In the example, a simple timer runs in the web browser, returning a time in miliseconds that has passed since 01/01/1970 at 00:00:00 UTC. The timer is continuously updated every millisecond using `setInterval()`. This is demanding on the web browser, but it should be manageable.
 Only when the `Start intensive calculation` button is clicked, the `startWork()` function is started, and here the script blocks the web browser. On the one hand the running timer is stopped or blocked. Also the status message `Calculation is performed ...` and the class assignment with CSS are not used.
 The intensive calculation is only simulated with a loop (700 million x 500), so that the web browser comes to its limits (if not then simply increase the values step by step).
 Some web browsers give a known error message that the web page is no longer responding, and a query is made whether the page should continue to run or not.
@@ -1495,7 +1495,7 @@ If the web browser can handle Web Workers, a Web Workers object can be created. 
    ...
   ```
 
-Here it is first checked whether the Web Worker does not already exist, before a new `worker` object can be created with `new`, which downloads the JavaScript file ansynchronously, reads it in and is then ready for execution.
+Here it is first checked whether the Web Worker does not already exist, before a new `worker` object can be created with `new`, which downloads the JavaScript file asynchronously, reads it in and is then ready for execution.
 
 A Web Worker has certain limitations and communication between the Web Worker and the Web Browser is done via messages. With the method `postMessage()` you can send single messages to the Worker and also send messages from the Web Worker. 
 
@@ -1824,6 +1824,7 @@ An overview of the individual APIs and their status can be found here [APIsList]
 --------------------------------------------------------------------------------------------
 
 ## The end
+This is just an introduction and a small overview of JavaScript Web APIs. There is much more information about this topic.
 
 If you don't know HTML, CSS or JavaScript yet, have a look here:
   - [WebDevelopment Basics](https://github.com/BellaMrx/WebDevelopment_Basics) - Basics Guide for web developers
