@@ -1779,7 +1779,7 @@ script.js:
 
  <img src="Images/WebAPI_Part-21.png" width="400"> 
 
-In `myfiles` a list of selected files, which were selected in the form and can be retrieved via `event.target-files` is stored. The `myfiles` object is a `FileList` type object.` `name`, `type` or `size` are properties provided by the interface of the `FileList` object.
+In `myfiles` a list of selected files, which were selected in the form and can be retrieved via `event.target-files` is stored. The `myfiles` object is a `FileList` type object. `name`, `type` or `size` are properties provided by the interface of the `FileList` object.
 
 If the contents of the files are to be read in and output instead of the information, the interface of the `FileReader` object must be used.
 
